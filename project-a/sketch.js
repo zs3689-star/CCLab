@@ -72,7 +72,7 @@ function drawCreature(x, y) {
 }
 
 function drawBody(x, y, size) {
-    angle = angle + 2 + 72;
+    angle = angle + 72 + 2;
 
     x1 = x1 - 0.08;
     if (x1 < -12) x1 = -12;
