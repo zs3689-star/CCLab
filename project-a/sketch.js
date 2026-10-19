@@ -14,14 +14,20 @@ let darkMode = false;
 let t = 0;
 let noiseSeedVal;
 
-
 let pauseTimer = 0;
 let isPaused = false;
 let pauseDuration;
 
+
+let mouseOffsetX = 0;
+let mouseOffsetY = 0;
+let smoothX = 0;
+let smoothY = 0;
+
 function setup() {
     createCanvas(800, 500);
     angleMode(DEGREES);
+
     noiseSeedVal = random(1000);
     noiseSeed(noiseSeedVal);
 }
@@ -29,6 +35,7 @@ function setup() {
 function draw() {
     if (isPaused) {
         pauseTimer++;
+
         if (pauseTimer >= pauseDuration) {
             isPaused = false;
             pauseTimer = 0;
@@ -38,16 +45,23 @@ function draw() {
     }
 
     if (t > 7) {
+        t = 7;
         noLoop();
         return;
     }
 
+    mouseOffsetX = map(mouseX, 0, width, 100, -100);
+    mouseOffsetY = map(mouseY, 0, height, 70, -70);
 
-    let headX = map(t, 0, 7, 50, 750);
+
+    smoothX = lerp(smoothX, mouseOffsetX, 0.05);
+    smoothY = lerp(smoothY, mouseOffsetY, 0.05);
+
+    let headX = map(t, 0, 7, 50, 750) + smoothX;
 
     let yCenter = 250;
     let amp = 220;
-    let headY = yCenter + (noise(t * 0.7) - 0.5) * amp;
+    let headY = yCenter + (noise(t * 0.7) - 0.5) * amp + smoothY;
 
     drawCreature(headX, headY);
 
@@ -63,6 +77,7 @@ function drawCreature(x, y) {
 
     drawBody(0, 0, 200);
     drawFeet(0, 0, 1.3, angle);
+
     push();
     rotate(-angle);
     drawEye();
@@ -82,7 +97,6 @@ function drawBody(x, y, size) {
     if (y1 < -8) y1 = -8;
     if (y1 > 8) y1 = 8;
 
-
     w = w - 0.9;
     if (w < 20) w = 20;
 
@@ -95,11 +109,13 @@ function drawBody(x, y, size) {
     translate(x, y);
     rotate(angle);
     noFill();
+
     if (darkMode) {
         stroke(255, 140, 0, 90);
     } else {
         stroke(200, 40, 90, 90);
     }
+
     ellipse(x1, y1, w, h);
     pop();
 }
@@ -108,6 +124,7 @@ function drawBody(x, y, size) {
 function keyPressed() {
     if (key === ' ') {
         darkMode = !darkMode;
+
 
         if (darkMode) {
             background(0);
@@ -121,13 +138,19 @@ function keyPressed() {
         h = 90;
         angle = 0;
         t = 0;
+
         isPaused = false;
         pauseTimer = 0;
+
+        smoothX = 0;
+        smoothY = 0;
 
         noiseSeedVal = random(1000);
         noiseSeed(noiseSeedVal);
 
         loop();
+
+        return false;
     }
 }
 
@@ -135,26 +158,34 @@ function drawFeet(x2, y2, len, angle) {
     push();
     translate(x2, y2);
     rotate(angle);
+
     stroke(0, 0, 255, 90);
     strokeWeight(0.3);
     noFill();
-    let footCount = 60;
+
     push();
     rotate(angle);
     line(90, 0, 60 + len, 0);
     pop();
+
     pop();
 }
 
 function drawEye() {
+    if (!darkMode) {
+        return;
+    }
+
     push();
     fill(255, 255, 90, 30);
     noStroke();
+
     beginShape();
     vertex(-12, -48);
     vertex(12, -48);
     vertex(0, -28);
     endShape(CLOSE);
+
     pop();
 }
 
