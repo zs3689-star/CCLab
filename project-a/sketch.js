@@ -104,29 +104,31 @@ function drawBody(x, y, size) {
     pop();
 }
 
-function mousePressed() {
-    darkMode = !darkMode;
 
-    if (darkMode) {
-        background(0);
-    } else {
-        background(215);
+function keyPressed() {
+    if (key === ' ') {
+        darkMode = !darkMode;
+
+        if (darkMode) {
+            background(0);
+        } else {
+            background(215);
+        }
+
+        x1 = 0;
+        y1 = 0;
+        w = 120;
+        h = 90;
+        angle = 0;
+        t = 0;
+        isPaused = false;
+        pauseTimer = 0;
+
+        noiseSeedVal = random(1000);
+        noiseSeed(noiseSeedVal);
+
+        loop();
     }
-
-    x1 = 0;
-    y1 = 0;
-    w = 120;
-    h = 90;
-    angle = 0;
-    t = 0;
-    isPaused = false;
-    pauseTimer = 0;
-
-
-    noiseSeedVal = random(1000);
-    noiseSeed(noiseSeedVal);
-
-    loop();
 }
 
 function drawFeet(x2, y2, len, angle) {
