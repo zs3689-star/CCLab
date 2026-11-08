@@ -17,7 +17,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
 
   // ...except to adjust the dancer's name on the next line:
-  dancer = new YourNameDancer(width / 2, height / 2);
+  dancer = new HalloweenDancer(width / 2, height / 2);
 }
 
 function draw() {
@@ -31,33 +31,99 @@ function draw() {
 
 // You only code inside this class.
 // Start by giving the dancer your name, e.g. LeonDancer.
-class YourNameDancer {
+class HalloweenDancer {
   constructor(startX, startY) {
     this.x = startX;
     this.y = startY;
+    this.t = 0;
+    this.armMove = 0;
+    this.legMove = 0;
+
+    this.hornColor = color(random(255), random(255), random(255));
+    this.tailColor = color(random(255), random(255), random(255));
+
     // add properties for your dancer here:
     //..
     //..
     //..
   }
   update() {
-    // update properties here to achieve
-    // your dancer's desired moves and behaviour
+
+    this.t += 0.08;
+    this.armMove = sin(this.t) * 25;
+    this.legMove = sin(this.t) * 20;
+
+
+    if (mouseIsPressed && !this.clicked) {
+      this.hornColor = color(random(255), random(255), random(255));
+      this.tailColor = color(random(255), random(255), random(255));
+    }
   }
+  // update properties here to achieve
+  // your dancer's desired moves and behaviour
+
   display() {
     // the push and pop, along with the translate 
     // places your whole dancer object at this.x and this.y.
     // you may change its position on line 19 to see the effect.
     push();
     translate(this.x, this.y);
+    rotate(sin(this.t) * 0.08);
 
     // ******** //
     // ⬇️ draw your dancer from here ⬇️
 
+    // Tail
+    noFill();
+    stroke(255);
+    strokeWeight(6);
+    bezier(-10, 25, -45, 45, -65, 10, -78, 35);
+
+    // Tail tip
+    noStroke();
+    fill(this.tailColor);
+    triangle(-78, 35, -65, 32, -75, 48);
+
+    // Legs
+    stroke(255);
+    strokeWeight(19);
 
 
+    line(-5, 28, -15 + this.legMove, 55);
+    line(-15 + this.legMove, 55, -25 + this.legMove, 78);
 
+    line(5, 28, 15 - this.legMove, 55);
+    line(15 - this.legMove, 55, 25 - this.legMove, 78);
 
+    // Body
+    strokeWeight(30);
+    line(0, -15, 0, 35);
+
+    // Arms
+    strokeWeight(17);
+
+    line(-10, -12, -35, -25 - this.armMove);
+    line(-35, -25 - this.armMove,
+      -65, -45 - this.armMove);
+
+    line(10, -12, 35, -25 + this.armMove);
+    line(35, -25 + this.armMove,
+      55, this.armMove);
+
+    // Head
+    noStroke();
+    fill(255);
+    ellipse(0, -42, 48, 48);
+
+    // Horns
+    fill(this.hornColor);
+    triangle(-19, -57, -25, -83, -5, -61);
+    triangle(5, -61, 25, -83, 19, -57);
+
+    // Eyes
+    fill(0);
+    ellipse(-9, -43, 5, 7);
+    ellipse(9, -43, 5, 7);
 
     // ⬆️ draw your dancer above ⬆️
     // ******** //
