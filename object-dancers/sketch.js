@@ -97,7 +97,7 @@ class HalloweenDancer {
 
     // Body
     strokeWeight(30);
-    line(0, -15, 0, 35);
+    line(0, -15, 0, 25);
 
     // Arms
     strokeWeight(17);
